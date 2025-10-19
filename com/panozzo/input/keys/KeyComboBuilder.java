@@ -1,7 +1,5 @@
 package com.panozzo.input.keys;
 
-import java.util.List;
-
 public class KeyComboBuilder {
 	private KeyCombo instance;
 	
