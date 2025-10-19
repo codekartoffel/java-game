@@ -1,13 +1,15 @@
 package com.panozzo.program;
 import javax.swing.JFrame;
 
+import com.panozzo.core.GameManagerListener;
+import com.panozzo.core.GameState;
 import com.panozzo.graphics.GamePanel;
 import com.panozzo.graphics.RenderableSurface;
 import com.panozzo.input.InputCaptureListener;
 import com.panozzo.input.InputCapturer.InputCancellationProvider;
 import com.panozzo.input.UserActionType;
 
-public class GameWindow extends JFrame implements InputCaptureListener {
+public class GameWindow extends JFrame implements InputCaptureListener, GameManagerListener {
 
 	private static final long serialVersionUID = 1L;
 	private GamePanel graphicsPanel;
@@ -38,6 +40,26 @@ public class GameWindow extends JFrame implements InputCaptureListener {
 	public void userActionOff(UserActionType action) {
 		// TODO Auto-generated method stub
 		System.out.println(String.format("%s OFF", action.name()));
+	}
+	
+	// Game Management
+
+	@Override
+	public void gameQuit() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void gameTick() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void gameStateChange(GameState current, GameState previous) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 	

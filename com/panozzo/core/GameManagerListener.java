@@ -8,4 +8,8 @@ public interface GameManagerListener {
 	 * The game manager wishes to quit the game
 	 */
 	public void gameQuit();
+	
+	public void gameTick();
+	
+	public void gameStateChange(GameState current, GameState previous);
 }

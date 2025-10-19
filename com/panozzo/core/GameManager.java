@@ -4,6 +4,7 @@ import java.awt.Graphics2D;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.panozzo.core.screens.SplashScreen;
 import com.panozzo.graphics.RenderableRoutine;
 import com.panozzo.graphics.RenderableSurface;
 
@@ -15,6 +16,11 @@ public class GameManager {
 	private List<GameManagerListener> listeners;
 	private List<RenderableRoutine> renderables;
 	
+	/**
+	 * Represents the game workflow state
+	 */
+	private GameState workflowState;
+	
 	private final RenderableSurface renderSpace;
 	
 	public GameManager(final RenderableSurface renderSpace)
@@ -22,6 +28,7 @@ public class GameManager {
 		listeners = new LinkedList<GameManagerListener>();
 		renderables = new LinkedList<RenderableRoutine>();
 		this.renderSpace = renderSpace;
+		this.workflowState = GameState.STARTUP;
 	}
 	
 	public void addListener(GameManagerListener listener)
@@ -54,9 +61,25 @@ public class GameManager {
 		this.renderables.clear();
 	}
 	
+	/**
+	 * Indicates the start of the game workflow. Push out a state change
+	 * to all listeners.
+	 */
+	public void start()
+	{
+		// Trigger the splash screen
+		// TODO: Fix why its not loading
+		SplashScreen splash = new SplashScreen();
+		renderables.add(splash);
+		listeners.add(splash);
+	}
+	
 	public void tick()
 	{
-		
+		for (var listener : listeners)
+		{
+			listener.gameTick();
+		}
 	}
 	
 	public void render()

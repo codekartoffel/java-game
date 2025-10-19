@@ -7,11 +7,12 @@ import javax.swing.JOptionPane;
 
 import com.panozzo.core.GameManager;
 import com.panozzo.core.GameManagerListener;
+import com.panozzo.core.GameState;
 import com.panozzo.input.InputCapturer;
 
 public class App {
 	
-	static class AppState implements GameManagerListener {
+	static class AppState {
 
 		public boolean keepGameAlive;
 		public double deltaTime;
@@ -26,12 +27,6 @@ public class App {
 			this.deltaTime = 0;
 			this.updatesPerSecond = 60.0;
 			this.shouldTick = false;
-		}
-		
-		@Override
-		public void gameQuit() {
-			// TODO Auto-generated method stub
-			keepGameAlive = false;
 		}
 		
 		public void registerIteration()
@@ -64,7 +59,6 @@ public class App {
 		AppState appState = new AppState();
 		
 		
-		game.addListener(appState);
 		inputCapture.addListener(win);
 		inputCapture.attachToGUI(win);
 		
@@ -86,7 +80,7 @@ public class App {
 		});
 		
 		win.setVisible(true);
-		
+		game.start();
 		
 		// Create Game loop
 		while (appState.keepGameAlive)
@@ -102,7 +96,8 @@ public class App {
 			appState.registerTick();
 			
 			// Tell the game manager to tick, request graphics, and draw
-			
+			game.tick();
+			game.render();
 		}
 	}
 
