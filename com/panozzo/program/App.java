@@ -19,13 +19,14 @@ public class App {
 		public long lastTimeNs;
 		public double updatesPerSecond;
 		public boolean shouldTick;
+		public long ticks;
 		
 		public AppState()
 		{
 			keepGameAlive = true;
 			this.lastTimeNs = System.nanoTime();
 			this.deltaTime = 0;
-			this.updatesPerSecond = 60.0;
+			this.updatesPerSecond = 60;
 			this.shouldTick = false;
 		}
 		
@@ -41,6 +42,8 @@ public class App {
 			if (deltaTime >= 1) {
 				// More than one frame has passed
 				this.shouldTick = true;
+				deltaTime = Math.max(0, deltaTime - 1); // Count any overage torwards next frame
+				ticks++;
 			}
 		}
 		
@@ -59,27 +62,33 @@ public class App {
 		AppState appState = new AppState();
 		
 		
-		inputCapture.addListener(win);
-		inputCapture.attachToGUI(win);
+		
 		
 		win.addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
-				int result = JOptionPane.showConfirmDialog(
-						null,
-						"Are you sure you want to exit?",
-						null,
-						JOptionPane.YES_NO_OPTION);
-				if (result == JOptionPane.YES_OPTION) {
-					win.setVisible(false);
-					// TODO: Perform any game disposal operations here too
-					win.dispose();
-					System.exit(0);
-				}
+				win.setVisible(false);
+				// TODO: Perform any game disposal operations here too
+				win.dispose();
+				System.exit(0);
+//				int result = JOptionPane.showConfirmDialog(
+//						null,
+//						"Are you sure you want to exit?",
+//						null,
+//						JOptionPane.YES_NO_OPTION);
+//				if (result == JOptionPane.YES_OPTION) {
+//					win.setVisible(false);
+//					// TODO: Perform any game disposal operations here too
+//					win.dispose();
+//					System.exit(0);
+//				}
 			}
 		});
 		
 		win.setVisible(true);
+		win.getRenderSurface().init();
+		inputCapture.addListener(win);
+		inputCapture.attachToGUI(win);
 		game.start();
 		
 		// Create Game loop

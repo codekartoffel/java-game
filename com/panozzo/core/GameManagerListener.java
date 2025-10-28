@@ -12,4 +12,6 @@ public interface GameManagerListener {
 	public void gameTick();
 	
 	public void gameStateChange(GameState current, GameState previous);
+	
+	public void gameClick(int x, int y);
 }

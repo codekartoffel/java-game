@@ -1,24 +1,26 @@
 package com.panozzo.graphics;
 
+import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 
+import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
 /**
  * A special JPanel capable of rendering graphics in a buffered way
  */
-public class GamePanel extends JPanel implements RenderableSurface{
+public class GamePanel extends Canvas implements RenderableSurface{
 	
 	
 	private static final long serialVersionUID = 1L;
-
-	/**
-	 * An image used to store graphics we intend to draw in the future.
-	 */
-	private BufferedImage backBuffer;
+	private BufferStrategy strategy;
 	
 	/**
 	 * Graphics object for drawing
@@ -28,13 +30,22 @@ public class GamePanel extends JPanel implements RenderableSurface{
 	public GamePanel(int width, int height)
 	{
 		this.setBounds(0, 0, width, height);
-		init();
+		this.setBackground(Color.BLACK);
+		this.setFocusable(true);
+		addComponentListener(new ComponentAdapter() {
+			@Override
+			public void componentResized(ComponentEvent e) {
+				reinit();
+			}
+		});
 	}
 	
-	private void init()
+	public void init()
 	{
-		backBuffer = new BufferedImage(this.getWidth(), this.getHeight(), BufferedImage.TYPE_INT_RGB);
-		g2d = backBuffer.createGraphics();
+		createBufferStrategy(2);
+		strategy = getBufferStrategy();
+		
+		g2d = (Graphics2D) strategy.getDrawGraphics();
 	}
 	
 	public Graphics2D requestGraphics()
@@ -42,18 +53,19 @@ public class GamePanel extends JPanel implements RenderableSurface{
 		return this.g2d;
 	}
 	
+	private void reinit() {
+		createBufferStrategy(2);
+		strategy = getBufferStrategy();
+		g2d = (Graphics2D) strategy.getDrawGraphics();
+		
+	}
+	
 	/**
 	 * Draw game graphics on the image
 	 */
 	public void render()
 	{
-		// Do not do any additional actions
-	}
-	
-	@Override
-	protected void paintComponent(Graphics g) {
-		super.paintComponent(g);
-		Graphics2D screen = (Graphics2D) g;
-		screen.drawImage(backBuffer, 0, 0, null);
+		Graphics g = strategy.getDrawGraphics();
+		strategy.show();
 	}
 }

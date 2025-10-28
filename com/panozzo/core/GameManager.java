@@ -1,10 +1,15 @@
 package com.panozzo.core;
 
+import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics2D;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.panozzo.core.screens.Screenable;
 import com.panozzo.core.screens.SplashScreen;
+import com.panozzo.core.screens.TicTacToeScreen;
 import com.panozzo.graphics.RenderableRoutine;
 import com.panozzo.graphics.RenderableSurface;
 
@@ -15,7 +20,10 @@ import com.panozzo.graphics.RenderableSurface;
 public class GameManager {
 	private List<GameManagerListener> listeners;
 	private List<RenderableRoutine> renderables;
+	private HashMap<String, RenderableRoutine> renderableDictionary;
+	private HashMap<String, GameManagerListener> managerListenerDictionary;
 	
+	private Screenable currentScreening;
 	/**
 	 * Represents the game workflow state
 	 */
@@ -27,6 +35,8 @@ public class GameManager {
 	{
 		listeners = new LinkedList<GameManagerListener>();
 		renderables = new LinkedList<RenderableRoutine>();
+		renderableDictionary = new HashMap<String, RenderableRoutine>();
+		managerListenerDictionary = new HashMap<String, GameManagerListener>();
 		this.renderSpace = renderSpace;
 		this.workflowState = GameState.STARTUP;
 	}
@@ -69,13 +79,55 @@ public class GameManager {
 	{
 		// Trigger the splash screen
 		// TODO: Fix why its not loading
-		SplashScreen splash = new SplashScreen();
-		renderables.add(splash);
-		listeners.add(splash);
+		showGameBoard();
+		return;
+		
+		
+//		workflowState = GameState.STARTUP;
+//		SplashScreen splash = new SplashScreen();
+//		renderableDictionary.put("splash", splash);
+//		managerListenerDictionary.put("splash", splash);
+//		renderables.add(splash);
+//		listeners.add(splash);
+//		currentScreening = splash;
+	}
+	
+	public void cleanupSplashScreen() {
+		RenderableRoutine splash = renderableDictionary.get("splash");
+		renderables.remove(splash);
+		GameManagerListener mListen = managerListenerDictionary.get("splash");
+		listeners.remove(mListen);
+	}
+	
+	public void showMainMenu() {
+		
+	}
+	
+	public void showGameBoard() {
+		workflowState = GameState.GAMEPLAY;
+		TicTacToeScreen ticTacToe = new TicTacToeScreen();
+		renderableDictionary.put("tictac", ticTacToe);
+		managerListenerDictionary.put("tictac", ticTacToe);
+		renderables.add(ticTacToe);
+		listeners.add(ticTacToe);
+		currentScreening = ticTacToe;
 	}
 	
 	public void tick()
 	{
+		// Check to see if we can progress to the next screen
+		switch (workflowState) {
+		case STARTUP:
+			if (currentScreening.checkIfDone()) {
+				cleanupSplashScreen();
+				showGameBoard();
+			}
+			
+			break;
+		default:
+			break;
+		}
+		
 		for (var listener : listeners)
 		{
 			listener.gameTick();
@@ -86,9 +138,15 @@ public class GameManager {
 	{
 		// Request graphics resources
 		Graphics2D g2d = renderSpace.requestGraphics();
+		Dimension size = renderSpace.getSize();
+		g2d.setBackground(Color.BLACK);
+		g2d.clearRect(0, 0, size.width, size.height);
 		for (var renderable : renderables)
 		{
-			renderable.render(g2d);
+			renderable.render(g2d, size);
 		}
+		
+		// Render on the surface after all images drawn
+		renderSpace.render();
 	}
 }

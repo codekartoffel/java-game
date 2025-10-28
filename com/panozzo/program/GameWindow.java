@@ -19,10 +19,15 @@ public class GameWindow extends JFrame implements InputCaptureListener, GameMana
 		super();
 		this.setSize(width, height);
 		this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		
 		// Add graphics panel
 		graphicsPanel = new GamePanel(width, height);
 		getContentPane().add(graphicsPanel);
+		graphicsPanel.requestFocus();
+	}
+	
+	public GamePanel getGamePanel()
+	{
+		return graphicsPanel;
 	}
 	
 	public RenderableSurface getRenderSurface()
@@ -58,6 +63,12 @@ public class GameWindow extends JFrame implements InputCaptureListener, GameMana
 
 	@Override
 	public void gameStateChange(GameState current, GameState previous) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void gameClick(int x, int y) {
 		// TODO Auto-generated method stub
 		
 	}

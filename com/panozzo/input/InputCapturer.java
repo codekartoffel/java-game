@@ -2,15 +2,19 @@ package com.panozzo.input;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 
 import com.panozzo.input.keys.KeyCombo;
+import com.panozzo.program.GameWindow;
 
-public class InputCapturer implements KeyListener {
+public class InputCapturer implements KeyListener, MouseListener {
 	/**
 	 * List of listeners which implement {@linkplain com.panozzo.input.InputCapturer InputCapturer}
 	 */
@@ -57,10 +61,10 @@ public class InputCapturer implements KeyListener {
 	 * Note: The GUI may already be used as a listener. This is ok,
 	 * since we may want other class types to be listeners.
 	 */
-	public void attachToGUI(JFrame origin)
+	public void attachToGUI(GameWindow origin)
 	{
-		origin.addKeyListener(this);
-		
+		origin.getGamePanel().addKeyListener(this);
+		origin.getGamePanel().addMouseListener(this);
 	}
 	
 	/**
@@ -170,6 +174,36 @@ public class InputCapturer implements KeyListener {
 		userActionState.put(UserActionType.RIGHT, false);
 		userActionState.put(UserActionType.UP, false);
 		userActionState.put(UserActionType.DOWN, false);
+	}
+
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+		// TODO Auto-generated method stub
+		System.out.println(String.format("Mouse %d %d", e.getX(), e.getY()));
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseExited(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
 	}
 }
 
